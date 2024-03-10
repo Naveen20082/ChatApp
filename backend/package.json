@@ -7,6 +7,7 @@
     "socket.io": "^4.7.4"
   },
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon Main.js",
+    "socket": "nodemon ./socket/index.js"
   }
 }

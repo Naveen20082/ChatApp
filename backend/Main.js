@@ -12,9 +12,9 @@ const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
-    res.render("");
-});
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+  });
 
 app.post("/registration", async (req, res) => {
     const { Name, Email, Password } = req.body;
@@ -70,7 +70,13 @@ app.post("/delete", async (req,res)=>{
 
 app.post("/socketConnection", async (req,res)=>{
     console.log("Socket Connection Request");
-})
+    res.send({
+        ip: "192.168.45.64",
+        port: "8080"
+    })
+});
+
+
 
 app.listen(port, () => {
     console.log(`server is running at ${port}`);
