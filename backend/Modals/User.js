@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 // const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const employeeSchema = new mongoose.Schema({
     Name:{
@@ -15,6 +16,10 @@ const employeeSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    Messages :{
+        type: Array,
+        required:false
+    }
    
     // tokens:[{
     //     token:{
@@ -25,16 +30,20 @@ const employeeSchema = new mongoose.Schema({
 
 })
 //token generation
-// employeeSchema.methods.produceAuthToken = async function(){
-//     try {
-//         const token = jwt.sign({_id:this._id}, process.env.UNREVEALED_KEY );
-//         this.tokens = this.tokens.concat({token:token});
-//         await this.save();
-//         return token;  
-//     } catch (error) {
-//         res.send(`the error is : ${error}`);
-//     }
-// }
+employeeSchema.methods.produceAuthToken = async function(){
+    try {
+        //JWT 1. Payloads 2. SecretKey
+        const token = jwt.sign({_id:this._id.toString()}, process.env.UNREVEALED_KEY, {
+            expiresIn: '3d'
+        } );
+        console.log(token)
+        await this.save();
+        return token;  
+    } catch (error) {
+        console.log(error)
+        // res.send(`the error is : ${error}`);
+    }
+}
 
 // employeeSchema.pre("save", async function(next){
 //     // if(this.isModified("Password")){

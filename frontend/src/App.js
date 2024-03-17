@@ -1,24 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
+import SocketContext, { SocketContextData } from './Context/SocketContext';
+import { io } from 'socket.io-client';
+import { useContext, useEffect, useState } from 'react';
+import MessageFeild from './Components/InputFeild/MessageFeild';
+import Login from './Components/Account/Login';
+import Messages from './Components/Messages';
 
 function App() {
+  const { registered, socket } = useContext(SocketContextData);
+
+ 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+     {registered===false && <Login/>}
+     {registered && <Messages/>}
+      
+    </>
   );
 }
 

@@ -7,6 +7,9 @@ require("./db/connection");
 const User = require("./Modals/User");
 const { json } = require("express");
 
+const cors = require('cors');
+app.use(cors());
+
 const port = process.env.PORT || 8000;
 
 app.use(express.json());
@@ -25,15 +28,16 @@ app.post("/registration", async (req, res) => {
     try {
         const existUser = await User.findOne({ Email: Email });
         if (existUser) {
-            return res.status(422).send({ error: "email already exist" });
+            return res.status(422).send({ error: "Please Login as Email Already Exist" });
         } else {
 
             const registeruserdata = new User({ Name, Email, Password });
-            console.log(registeruserdata);
 
-            const registered = await registeruserdata.save();
-            console.log(registered);
-            res.status(201).send({ display: registered });
+            const token = await registeruserdata.produceAuthToken();
+
+            const userData = await registeruserdata.save();
+            console.log({userData ,token});
+            res.status(201).send( {userData ,token} );
         }
     }
     catch (error) {
@@ -71,7 +75,7 @@ app.post("/delete", async (req,res)=>{
 app.post("/socketConnection", async (req,res)=>{
     console.log("Socket Connection Request");
     res.send({
-        ip: "192.168.45.64",
+        ip: "http://192.168.45.64:",
         port: "8080"
     })
 });
