@@ -1,6 +1,6 @@
-
 const express = require("express");
 const path = require("path");
+const bcrypt = require("bcryptjs");
 const app = express();
 
 require("./db/connection");
@@ -14,6 +14,7 @@ const port = process.env.PORT || 8000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -70,6 +71,30 @@ app.post("/delete", async (req,res)=>{
         console.log(error)
         res.status(400).send(error);
     } 
+});
+
+// // login validation
+app.post("/login", async(req, res)=>{
+    try {
+        const Email = req.body.Email;
+        const Password = req.body.Password;
+
+        const useremail = await User.findOne({Email});
+
+        const token = await useremail.produceAuthToken();
+
+        const isMatch = await bcrypt.compare(Password, useremail.Password);
+
+        if(isMatch){
+            res.status(201).send({token: token});
+        } else{
+            res.send("data is not correct");
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).send("invalid E-mail")
+    }
 })
 
 app.post("/socketConnection", async (req,res)=>{

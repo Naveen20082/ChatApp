@@ -3,12 +3,18 @@ import { SocketContextData } from '../Context/SocketContext'
 import MessageFeild from './InputFeild/MessageFeild'
 
 const Messages = () => {
-    const { messages,socket } = useContext(SocketContextData);
+    const { messages, socket, setRegistered } = useContext(SocketContextData);
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-console.log(userInfo)
+    console.log(userInfo)
+
+    const LogOutHandler = ()=>{
+        localStorage.setItem("userInfo", null);
+        setRegistered(false)
+    }
     return (
 
         <>
+            <button onClick={LogOutHandler}>LogOut</button>
             <section className="msger">
                 <header className="msger-header">
                     <div className="msger-header-title">
@@ -23,10 +29,10 @@ console.log(userInfo)
                     {
                         messages.map((message, index, array) => {
                             return (
-                                <div className={userInfo.userData.Name!== message?.user?.Name?"msg left-msg" :"msg right-msg"} key={index}>
+                                <div className={userInfo.userData.Name !== message?.user?.Name ? "msg left-msg" : "msg right-msg"} key={index}>
                                     <div
                                         className="msg-img"
-                                        // style={{ backgroundImage: "url(https://image.flaticon.com/icons/svg/327/327779.svg)" }}
+                                    // style={{ backgroundImage: "url(https://image.flaticon.com/icons/svg/327/327779.svg)" }}
                                     ></div>
 
                                     <div className="msg-bubble">

@@ -5,6 +5,8 @@ import { useContext, useEffect, useState } from 'react';
 import MessageFeild from './Components/InputFeild/MessageFeild';
 import Login from './Components/Account/Login';
 import Messages from './Components/Messages';
+import SignUp from './Components/Account/SignUp';
+import LoginSignUpPage from './Components/Account/LoginSignUpPage';
 
 function App() {
   const { registered, socket } = useContext(SocketContextData);
@@ -12,8 +14,10 @@ function App() {
  
   return (
     <>
-     {registered===false && <Login/>}
-     {registered && <Messages/>}
+     {registered===false &&      <LoginSignUpPage/>}
+     {registered &&
+      <Messages/>
+        } 
       
     </>
   );

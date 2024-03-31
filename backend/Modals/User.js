@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-// const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-const employeeSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     Name:{
         type:String,
         required:true
@@ -30,7 +30,7 @@ const employeeSchema = new mongoose.Schema({
 
 })
 //token generation
-employeeSchema.methods.produceAuthToken = async function(){
+UserSchema.methods.produceAuthToken = async function(){
     try {
         //JWT 1. Payloads 2. SecretKey
         const token = jwt.sign({_id:this._id.toString()}, process.env.UNREVEALED_KEY, {
@@ -45,16 +45,16 @@ employeeSchema.methods.produceAuthToken = async function(){
     }
 }
 
-// employeeSchema.pre("save", async function(next){
-//     // if(this.isModified("Password")){
-//     //      this.Password = await bcrypt.hash(this.Password, 10);
+UserSchema.pre("save", async function(next){
+    if(this.isModified("Password")){
+        this.Password = await bcrypt.hash(this.Password, 10);
 
-//     //     this.Confirm_Password = await bcrypt.hash(this.Confirm_Password, 10);
-//     // }
-//     next();
-// })
+        // this.Confirm_Password = await bcrypt.hash(this.Confirm_Password, 10);
+    }
+    next();
+})
 
 //  creating a collection
 
-const User = new mongoose.model("User", employeeSchema);
+const User = new mongoose.model("User", UserSchema);
 module.exports = User;

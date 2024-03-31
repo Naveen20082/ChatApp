@@ -3,27 +3,29 @@ import { SocketContextData } from '../../Context/SocketContext';
 import axios from 'axios';
 import {jwtDecode} from "jwt-decode";
 
-const Login = () => {
+const SignUp = () => {
 
     const { registered, setRegistered } = useContext(SocketContextData)
-    const [loginData, setLoginData] = useState({
+    const [inputField, setInputField] = useState({
+        Name: '',
         Email: '',
         Password: '',
     })
 
-    const loginInputHandler = (e) => {
-        setLoginData((prev)=>{ return { ...prev,  [e.target.name]: e.target.value }})
+    const inputsHandler = (e) => {
+        setInputField((prev)=>{ return { ...prev,  [e.target.name]: e.target.value }})
     }
 
-    const LoginHandler = (event) => {
+    const SignUpHandler = (event) => {
         event.preventDefault();
         try {
             let data = {
-                "Email": loginData.Email,
-                "Password": loginData.Password,
+                "Name": inputField.Name,
+                "Email": inputField.Email,
+                "Password": inputField.Password,
             }
-            console.log(loginData, data)
-            axios.post('http://localhost:8000/login', data).then((response) => {
+            console.log(inputField, data)
+            axios.post('http://localhost:8000/registration', data).then((response) => {
                 const token = jwtDecode(response.data.token);
                 const d = new Date();
                 console.log(response.data , token,Math.floor(d.getTime()/1000));
@@ -41,12 +43,13 @@ const Login = () => {
     return (
         <>
                 <form id="login_form" action="" className=''>
-                    <input id="input" autoComplete="off" onChange={loginInputHandler} name='Email' value={loginData.Email} placeholder="Type in your Email" />
-                    <input id="input" autoComplete="off" onChange={loginInputHandler} name='Password' value={loginData.Password} placeholder="Type in your Password" />
-                    <button onClick={LoginHandler}>Login</button>
+                    <input id="input" autoComplete="off" onChange={inputsHandler} name='Name' value={inputField.Name} placeholder="Type in your Name" />
+                    <input id="input" autoComplete="off" onChange={inputsHandler} name='Email' value={inputField.Email} placeholder="Type in your Email" />
+                    <input id="input" autoComplete="off" onChange={inputsHandler} name='Password' value={inputField.Password} placeholder="Type in your Password" />
+                    <button onClick={SignUpHandler}>Sign Up</button>
                 </form>
         </>
     )
 }
 
-export default Login
+export default SignUp
